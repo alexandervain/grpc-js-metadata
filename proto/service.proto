@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package com.wix;
+
+service Service {
+    rpc Ping (Message) returns (Empty);
+}
+
+message Empty {
+
+}
+
+message Message {
+    int32 metadata_size = 1;
+}
+
