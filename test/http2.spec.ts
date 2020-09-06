@@ -5,7 +5,7 @@ const HEADER = 'trailer';
 
 describe('http2 headers size', () => {
 
-  const server = http2.createServer({maxSendHeaderBlockLength: 128 * 1024});
+  const server = http2.createServer(/*{maxSendHeaderBlockLength: 128 * 1024}*/);
   server.on('stream', (req, headers) => {
     const size = headers[SIZE_HEADER] as string;
     const payload = 'X'.repeat(parseInt(size));
@@ -42,6 +42,23 @@ describe('http2 headers size', () => {
     req.on('trailers', trailers => {
       console.log('*********http2.spec.ts:30*********** trailers[HEADER].length: ', trailers[HEADER].length);
       session.close(done);
+    })
+
+    req.on('aborted', () => {
+      console.log('*********http2.spec.ts:48*********** aborted ');
+    })
+
+    req.on('close', function()  {
+      console.log('*********http2.spec.ts:52*********** closed ');
+      console.log('*********http2.spec.ts:53*********** arguments: ', arguments);
+    })
+
+    req.on('error', () => {
+      console.log('*********http2.spec.ts:56*********** error ');
+    })
+
+    req.on('frameError', () => {
+      console.log('*********http2.spec.ts:60*********** frameError ');
     })
   });
 });
