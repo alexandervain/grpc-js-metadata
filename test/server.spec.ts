@@ -32,22 +32,14 @@ describe('big metadata response halting problem', function () {
   after(() => server.forceShutdown());
 
   it('passes', done => {
-    client.Ping({metadataSize: 63 * 1024}, (err, res) => {
-      if (err) {
-        done(err);
-      } else {
-        done();
-      }
-    });
+    client.Ping({metadataSize: 63 * 1024}, done);
   });
 
-  it('halts', done => {
-    client.Ping({metadataSize: 64 * 1024}, (err, res) => {
-      if (err) {
-        done(err);
-      } else {
-        done();
-      }
-    });
+  it('now passes (halted previously in https://github.com/grpc/grpc-node/issues/1533)', done => {
+    client.Ping({metadataSize: 64 * 1024}, done);
+  });
+
+  it('now halts (with metadata size > 64KB)', done => {
+    client.Ping({metadataSize: 65 * 1024}, done);
   });
 });
